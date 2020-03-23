@@ -1,0 +1,2 @@
+# NoContactTherm
+No contact thermometer
