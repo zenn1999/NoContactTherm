@@ -8,6 +8,7 @@
 #define TFT_CS  10 // TFT select pin
 #define TFT_DC  7  // TFT display/command pin
 #define TFT_RST 9  // Or set to -1 and connect to Arduino RESET pin
+#define BTN     2  // Button to measure temp
 
 //Comment this out to remove the text overlay
 //#define SHOW_TEMP_TEXT
@@ -54,6 +55,8 @@ unsigned long delayTime;
 float pixels[AMG88xx_PIXEL_ARRAY_SIZE];
 uint16_t displayPixelWidth, displayPixelHeight;
 
+int buttonState = 0;
+
 void setup() {
     Serial.begin(9600);
     tft.init(135, 240);           // Init ST7789 135x240
@@ -64,6 +67,9 @@ void setup() {
     displayPixelHeight = tft.height() / 8;
 
     bool status;
+
+    // initialize the pushbutton pin as an input:
+    pinMode(BTN, INPUT);
     
     // default settings
     status = amg.begin();
@@ -95,10 +101,12 @@ void loop() {
     tft.setTextSize(1);
     tft.print(pixels[i]);
     #endif
+
+    buttonState = digitalRead(BTN);
     
-    if(pixels[i] >= MAXTEMP) {
+    if(pixels[i] >= MAXTEMP && buttonState) {
       tft.setTextSize(2);
-      tft.fillRect(150, 5, 60, 14, ST77XX_BLACK); // This line blacks out the old text.
+      tft.fillRect(150, 5, 70, 14, ST77XX_BLACK); // This line blacks out the old text.
       tft.setCursor(150, 5);
       tft.print((pixels[i] * 9 / 5) + 32); // i=temp in celcius. equation converts to Farenheit. Just print pixels[i] for celcius
       tft.print(" F"); // If using celcius change to C.
