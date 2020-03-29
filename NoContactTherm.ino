@@ -60,11 +60,13 @@ int buttonState = 0;
 void setup() {
     Serial.begin(9600);
     tft.init(135, 240);           // Init ST7789 135x240
+    delay(100);
     tft.fillScreen(ST77XX_BLACK);
     tft.setRotation(3);           // Rotates to 240x135
-
-    displayPixelWidth = tft.width() / 8;
-    displayPixelHeight = tft.height() / 8;
+    
+    // Using using 135x135 instead of 135x240 to keep the pixel display square and center 
+    displayPixelWidth = 135 / 8;
+    displayPixelHeight = 135 / 8;
 
     bool status;
 
