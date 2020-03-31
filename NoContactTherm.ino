@@ -62,7 +62,7 @@ void setup() {
     tft.init(135, 240);           // Init ST7789 135x240
     delay(100);
     tft.fillScreen(ST77XX_BLACK);
-    tft.setRotation(3);           // Rotates to 240x135
+    //tft.setRotation(3);
     
     // Using using 135x135 instead of 135x240 to keep the pixel display square and center 
     displayPixelWidth = 135 / 8;
@@ -71,7 +71,7 @@ void setup() {
     bool status;
 
     // initialize the pushbutton pin as an input:
-    pinMode(BTN, INPUT);
+    pinMode(BTN, INPUT_PULLUP);
     
     // default settings
     status = amg.begin();
@@ -108,8 +108,8 @@ void loop() {
     
     if(pixels[i] >= MAXTEMP && buttonState) {
       tft.setTextSize(2);
-      tft.fillRect(150, 5, 70, 14, ST77XX_BLACK); // This line blacks out the old text.
-      tft.setCursor(150, 5);
+      tft.fillRect(5, 145, 70, 14, ST77XX_BLACK); // This line blacks out the old text.
+      tft.setCursor(5, 145);
       tft.print((pixels[i] * 9 / 5) + 32); // i=temp in celcius. equation converts to Farenheit. Just print pixels[i] for celcius
       tft.print(" F"); // If using celcius change to C.
     }
