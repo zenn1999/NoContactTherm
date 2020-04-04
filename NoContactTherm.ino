@@ -53,6 +53,7 @@ Adafruit_ST7789      tft    = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 Adafruit_AMG88xx amg;
 unsigned long delayTime;
 float pixels[AMG88xx_PIXEL_ARRAY_SIZE];
+float hotestPix = 0;
 uint16_t displayPixelWidth, displayPixelHeight;
 
 int buttonState = 0;
@@ -107,10 +108,13 @@ void loop() {
     buttonState = digitalRead(BTN);
     
     if(pixels[i] >= MAXTEMP && buttonState) {
+      if(pixels[i] > hotestPix) {
+        hotestPix = pixels[i];
+      }
       tft.setTextSize(2);
-      tft.fillRect(5, 145, 70, 14, ST77XX_BLACK); // This line blacks out the old text.
+      tft.fillRect(5, 145, 90, 14, ST77XX_BLACK); // This line blacks out the old text.
       tft.setCursor(5, 145);
-      tft.print((pixels[i] * 9 / 5) + 32); // i=temp in celcius. equation converts to Farenheit. Just print pixels[i] for celcius
+      tft.print((hotestPix * 9 / 5) + 32); // i=temp in celcius. equation converts to Farenheit. Just print pixels[i] for celcius
       tft.print(" F"); // If using celcius change to C.
     }
   }
