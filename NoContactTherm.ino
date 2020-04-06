@@ -53,7 +53,7 @@ Adafruit_ST7789      tft    = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 Adafruit_AMG88xx amg;
 unsigned long delayTime;
 float pixels[AMG88xx_PIXEL_ARRAY_SIZE];
-float hotestPix = 0;
+float hotestPixel = 0;
 uint16_t displayPixelWidth, displayPixelHeight;
 
 int buttonState = 0;
@@ -105,17 +105,23 @@ void loop() {
     tft.print(pixels[i]);
     #endif
 
+    //This will check the button's state. Whether it's being pushed or not. Pushed is high.
     buttonState = digitalRead(BTN);
-    
+
+    // If a pixel temperature is greater or equal the maxtemp and the button is being pushed...
     if(pixels[i] >= MAXTEMP && buttonState) {
-      if(pixels[i] > hotestPix) {
-        hotestPix = pixels[i];
+      // If any of those pixels are greater than the hottest
+      if(pixels[i] > hotestPixel) {
+        hotestPixel = pixels[i];   // Store the greatest value
       }
+      // Print the greatest value to the screen
       tft.setTextSize(2);
       tft.fillRect(5, 145, 90, 14, ST77XX_BLACK); // This line blacks out the old text.
       tft.setCursor(5, 145);
-      tft.print((hotestPix * 9 / 5) + 32); // i=temp in celcius. equation converts to Farenheit. Just print pixels[i] for celcius
+      tft.print((hotestPixel * 9 / 5) + 32); // i=temp in celcius. equation converts to Farenheit. Just print pixels[i] for celcius
       tft.print(" F"); // If using celcius change to C.
+    }else if(hotestPixel > 0) {  // But if you are not pushing the button and hotestPixel still has a value, clear the variable to run again
+      hotestPixel = 0;
     }
   }
 }
